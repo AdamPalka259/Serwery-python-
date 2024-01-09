@@ -5,7 +5,7 @@
 
 (3) Jakub Bartman, 410987
 
-Kierownik grupy: Adam Palka
+Kierownik grupy: na pewno NIE Adam Palka
 
 Serwery informatyczne, stanowiąc podstawę dla dzisiejszego świata cyfrowego, są niewidocznymi, lecz niezwykle istotnymi elementami naszej codzienności. Pełniąc rolę centralnego punktu w infrastrukturze sieciowej, mają ogromny wpływ na sposób, w jaki funkcjonujemy online, przechowujemy dane i korzystamy z usług internetowych.
 
