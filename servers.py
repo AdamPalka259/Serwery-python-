@@ -29,9 +29,9 @@ class TooManyProductsFoundError:
 class Server(ABC):
     n_max_returned_entries: int = 3
     def __init__(self, *args, **kwargs) ->None:
-        super.__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
-    def get_entries(self, n_letters) ->List[Product]:
+    def get_entries(self, n_letters: int = 1) ->List[Product]:
         pattern = '^[a-zA-Z]{{{n}}}\\d{{2,3}}$'.format(n=n_letters)
         entries = [prod for prod in self.get_all_products(n_letters) if re.match(pattern, prod.name)]
         if len(entries) > Server.n_max_returned_entries:
@@ -39,7 +39,7 @@ class Server(ABC):
         return sorted(entries, key=lambda prod: prod.price)
 
     @abstractmethod
-    def get_all_products(self, n_letters: int = 3) -> List[Product]:
+    def get_all_products(self, n_letters: int = 1) -> List[Product]:
         raise NotImplementedError
 
 
@@ -54,7 +54,7 @@ class ListServer(Server):
         super().__init__(*args, **kwargs)
         self.products_: List[Product] = products
 
-    def get_all_products(self, n_letters: int = 3) -> List[Product]:
+    def get_all_products(self, n_letters: int = 1) -> List[Product]:
         return self.products_
 
 
@@ -63,12 +63,20 @@ class MapServer(Server):
         super().__init__(*args, **kwargs)
         self.products_: Dict[str, Product] = {product.name: product for product in products}
 
-    def get_all_products(self, n_letters: int = 3) -> List[Product]:
+    def get_all_products(self, n_letters: int = 1) -> List[Product]:
         return list(self.products_.values())
 
 
 class Client:
     # FIXME: klasa powinna posiadać metodę inicjalizacyjną przyjmującą obiekt reprezentujący serwer
+    def __init__(self, server: Server):
+        self.server_ = server
 
     def get_total_price(self, n_letters: Optional[int]) -> Optional[float]:
-        raise NotImplementedError()
+        try:
+            entries_ = self.server_.get_entries() if n_letters is None else self.server_.get_entries(n_letters)
+            if not entries_:
+                return None
+            return sum([entry.price for entry in entries_])
+        except TooManyProductsFoundError:
+            return None
