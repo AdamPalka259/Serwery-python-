@@ -20,8 +20,10 @@ class Product:
     def __hash__(self) -> int:
         return hash((self.name, self.price))
 
+class ServerError(Exception):
+    pass
 
-class TooManyProductsFoundError:
+class TooManyProductsFoundError(ServerError):
     # Reprezentuje wyjątek związany ze znalezieniem zbyt dużej liczby produktów.
     pass
 
