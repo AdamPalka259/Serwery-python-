@@ -54,31 +54,31 @@ class Server(ABC):
 class ListServer(Server):
     def __init__(self, products: List[Product], *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.products_: List[Product] = products
+        self.products: List[Product] = products
 
     def get_all_products(self, n_letters: int = 1) -> List[Product]:
-        return self.products_
+        return self.products
 
 
 class MapServer(Server):
     def __init__(self, products: List[Product], *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.products_: Dict[str, Product] = {product.name: product for product in products}
+        self.products: Dict[str, Product] = {product.name: product for product in products}
 
     def get_all_products(self, n_letters: int = 1) -> List[Product]:
-        return list(self.products_.values())
+        return list(self.products.values())
 
 
 class Client:
     # FIXME: klasa powinna posiadać metodę inicjalizacyjną przyjmującą obiekt reprezentujący serwer
     def __init__(self, server: Server):
-        self.server_ = server
+        self.server = server
 
     def get_total_price(self, n_letters: Optional[int]) -> Optional[float]:
         try:
-            entries_ = self.server_.get_entries() if n_letters is None else self.server_.get_entries(n_letters)
-            if not entries_:
+            entries = self.server.get_entries() if n_letters is None else self.server.get_entries(n_letters)
+            if not entries:
                 return None
-            return sum([entry.price for entry in entries_])
+            return sum([entry.price for entry in entries])
         except TooManyProductsFoundError:
             return None
